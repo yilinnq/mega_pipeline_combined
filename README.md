@@ -1,4 +1,49 @@
-# Mega Pipeline App
+# Mega Pipeline (Combined)
+
+Combining 5 individual components of the Mega Pipeline App (https://ac215-mega-pipeline.dlops.io/) from the [AC215 repository](https://github.com/dlops-io/mega-pipeline/tree/main?tab=readme-ov-file) into one assembled mega_pipeline. 
+
+## Directory Structure
+```
+├── mega_cli.py            # [Assembled mega pipeline] The script for the assembled mega pipeline
+├── .gitignore
+├── README.md
+├── Pipfile        # [Assembled mega pipeline] Pipfile for the mega-pipeline Docker container
+├── Pipfile.lock
+├── Dockerfile     # [Assembled mega pipeline] Dockerfile for the mega-pipeline Docker container
+├── secrets/                      # Secrets directory (Please add this file yourself)
+│    └── mega-pipeline.json
+├── generate_text/                     # [Individual component] generate_text
+│    ├── generate_text_cli.py
+│    ├── README.md    
+│     
+├── synthesis_audio/                     # [Individual component] synthesis_audio
+│    ├── synthesis_audio_cli.py
+│    ├── README.md           
+│     
+├── synthesis_audio_en/                     # [Individual component] synthesis_audio_en
+│    ├── synthesis_audio_en_cli.py
+│    ├── README.md      
+│     
+├── transcribe_audio/                     # [Individual component] transcribe_audio
+│    ├── transcribe_audio_cli.py
+│    ├── README.md 
+│      
+├── translate_text/                     # [Individual component] translate_text
+│    ├── translate_text_cli.py
+│    ├── README.md      
+```
+
+## Setup
+in the root of the repository, run 
+```
+docker build -t mega-pipeline-image .
+docker run --rm mega-pipeline-image
+```
+This will automatically execute the `mega_cli.py` script and execute all components of the mega pipeline in the following order:
+<img src="mega-pipeline-flow.png"  width="800">
+
+
+## README.md from original repo
 
 🎙️ &rightarrow; 📝 &rightarrow; 🗒️ &rightarrow;  [🔊🇫🇷] &rightarrow; 🔊
 
@@ -15,7 +60,7 @@ In this tutorial we will build a [Mega Pipeline App](https://ac215-mega-pipeline
 The pipeline flow is as shown:
 <img src="mega-pipeline-flow.png"  width="800">
 
-## The class will work in groups to perform the following tasks:
+### The class will work in groups to perform the following tasks:
 * 📝Task A [transcribe_audio](https://github.com/dlops-io/mega-pipeline/tree/main/transcribe_audio):
 * 🗒️Task B [generate_text](https://github.com/dlops-io/mega-pipeline/tree/main/generate_text):
 * 🔊Task C [synthesis_audio_en](https://github.com/dlops-io/mega-pipeline/tree/main/synthesis_audio_en):
@@ -25,12 +70,12 @@ The pipeline flow is as shown:
 Each team will create a Docker containers to build all the tasks. Each team will use a unique group-number to track the overall progress.
 The overall progress of this mega pipeline can be viewed [here](https://ac215-mega-pipeline.dlops.io/)
 
-## GCP Credentials File:
+### GCP Credentials File:
 Download the json file and place inside <app_folder>/secrets:
 <a href="https://static.us.edusercontent.com/files/mlca0YEYdvkWPNEowJ0o4hOd" download>mega-pipeline.json</a>
 
 
-## GCS Bucket Details:
+### GCS Bucket Details:
 * **input_audios** - Bucket where we store the input audio files
 * **text_prompts** - Bucket where we store the text prompts that was synthesized by audio to text
 * **text_paragraphs** - Bucket where we store the generated text from GPT2
@@ -42,7 +87,7 @@ Download the json file and place inside <app_folder>/secrets:
 ![Mega pipeline bucket](mega-pipeline-bucket.png)
 
 
-### Resulting CLI options for each container
+#### Resulting CLI options for each container
 
 **Transcribe Audio**
 ```
@@ -78,7 +123,7 @@ python cli.py --synthesis
 ```
 
 
-### Sample Code to Read/Write to GCS Bucket
+#### Sample Code to Read/Write to GCS Bucket
 
 * Download from bucket
 ```
@@ -117,7 +162,7 @@ blob.upload_from_filename("Path to test.mp3 on local computer")
 
 ```
 
-### Sample Dockerfile
+#### Sample Dockerfile
 ```
 # Use the official Debian-hosted Python image
 FROM python:3.8-slim-buster
@@ -154,12 +199,12 @@ ENTRYPOINT ["/bin/bash"]
 CMD ["-c", "pipenv shell"]
 ```
 
-### Some notes for running on Windows
+#### Some notes for running on Windows
 * Docker Win10 installation - needs WSL2 or Hyper-V enabled: https://docs.docker.com/desktop/windows/install/
 * Use `Git` BASH to run (which is like a smaller `Cygwin`)
 * Needed to add pwd in quotes in order to escape the spaces that common in windows directory structures
 * Need to prefix docker run with `winpty` otherwise I get a "the input device is not a TTY." error
 * `winpty docker run --rm -ti --mount type=bind,source="$(pwd)",target=/app generate_text`
 
-## Solutions
+### Solutions
 Solutions to this tutorial can be found [here]()
